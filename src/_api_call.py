@@ -1,6 +1,7 @@
 import requests
 from config import Config as conf
 from utils import fprint
+from rest_endpoint import RESTEndpoint
 
 
 def __SimpleRequest(url, headers={}, payload={}, params={}, method="GET"):
@@ -14,7 +15,7 @@ def __SimpleRequest(url, headers={}, payload={}, params={}, method="GET"):
 
 
 def SearchSongByName(query: str):
-    url = "https://39b8f5ea-c383-416f-a7b6-03d8a88fd5a4.mock.pstmn.io/youtube/v3/search"
+    url = "https://{}{}".format(RESTEndpoint.BASE_URL, RESTEndpoint.SEARCH_ENDPOINT)
     params = {
         "part": "snippet",
         "maxResults": 25,
