@@ -8,9 +8,9 @@ conf_file_path = os.path.join(Path(__file__).parent, "const", "config.json")
 
 class Config:
     _instance = None
-    API_KEY = ""  # AIzaSyD5pqDH2QDRdidgDh5D-mYOP02_EMedq08
-    MPV_PATH = ""  # C:\Users\Utsav Patel\Downloads\Programs\bootstrapper\mpv
-    AUDIO_ONLY = ""  # True
+    API_KEY = ""
+    MPV_PATH = ""
+    AUDIO_ONLY = ""
 
     # @classmethod
     # def instance(cls):
