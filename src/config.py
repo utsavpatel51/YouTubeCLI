@@ -7,7 +7,6 @@ conf_file_path = os.path.join(Path(__file__).parent, "const", "config.json")
 
 
 class Config:
-    _instance = None
     API_KEY = ""
     MPV_PATH = ""
     AUDIO_ONLY = ""
