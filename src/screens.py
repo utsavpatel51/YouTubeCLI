@@ -9,6 +9,7 @@ session = _PromtSession.instance()
 
 
 def render_logo() -> None:
+    """render logo of application"""
     print("\n" * 20)
     logo = r"""
     __  __           ______      __            ________    ____
@@ -22,13 +23,15 @@ def render_logo() -> None:
 
 
 def check_user_input(user_input: str) -> None:
-    """Common method to check user input from prompt
-
+    """
+    Common method to check user input from prompt
     Args:
         user_input (str): user's input
     """
+    # Help command
     if user_input.lower().startswith("help"):
         render_help_screen()
+    # Search command
     elif user_input.lower().startswith("search"):
         if len(user_input.split(" ")) > 1:
             render_search_screen(user_input)
@@ -37,6 +40,7 @@ def check_user_input(user_input: str) -> None:
             fprint(
                 "<invalid>Bad Syntax. Please provide title for search or check help section</invalid>"
             )
+    # Set config command
     elif user_input.lower().startswith("set"):
         if user_input.find("=") >= 0:
             set_user_config(user_input)
@@ -51,7 +55,7 @@ def check_user_input(user_input: str) -> None:
 
 
 def render_welcome_screen() -> None:
-    # session = _PromtSession.instance()
+    """Render welcome screen of application"""
     render_logo()
 
     while True:
@@ -63,6 +67,7 @@ def render_welcome_screen() -> None:
 
 
 def render_help_screen() -> None:
+    """Render help screen"""
     print("\n" * 20)
     fprint("<sub_title>{}</sub_title>".format(rj("Available options")))
     print()
@@ -71,7 +76,11 @@ def render_help_screen() -> None:
 
 
 def render_search_screen(user_input: str) -> None:
-    # session = _PromtSession.instance()
+    """Render search screen
+
+    Args:
+        user_input (str): search query
+    """
     print("\n" * 20)
     search_title = user_input.split("search")[1].strip()
     videos_list = SearchSongByName(query=search_title)
@@ -89,6 +98,7 @@ def render_search_screen(user_input: str) -> None:
                 )
 
         user_input = session.prompt(">").strip()
+        # Check if user want to play song from above list
         if user_input.isdigit():
             user_input = int(user_input)
             if user_input > 0 and user_input - 1 <= len(videos_list):
@@ -106,13 +116,19 @@ def render_search_screen(user_input: str) -> None:
             else:
                 print("\n" * 20)
                 fprint("<invalid>Invalid range provided</invalid>")
+        # Check if user want to check others command
         else:
             check_user_input(user_input)
 
 
 def set_user_config(user_input: str) -> None:
+    """Set config value of application
+
+    Args:
+        user_input (str): User input string
+    """
     command, value = map(str.strip, user_input.split("set")[-1].split("="))
-    print(command, value)
+    # If config key match set
     if Config.check_key(command):
         Config.set(command, value)
     else:
@@ -122,6 +138,7 @@ def set_user_config(user_input: str) -> None:
 
 
 def render_all_configs() -> None:
+    # Render all config to screen
     fprint("<title> {:<20}: {:<20}</title>".format("Key", "Value"))
     for key, val in Config.get_all_key().items():
         if not key.startswith("__"):

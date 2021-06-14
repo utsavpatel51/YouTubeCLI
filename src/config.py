@@ -12,13 +12,6 @@ class Config:
     MPV_PATH = ""
     AUDIO_ONLY = ""
 
-    # @classmethod
-    # def instance(cls):
-    #     if cls._instance is None:
-    #         cls._instance = cls.__new__(cls)
-    #         cls.load()
-    #     return cls._instance
-
     def __init__(self) -> None:
         raise RuntimeError("Use classmethod insted of creating instance.")
 
