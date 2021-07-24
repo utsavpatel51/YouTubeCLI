@@ -1,11 +1,11 @@
 import os
 import sys
-from utils import fprint, lj, rj, _PromtSession
+from utils import fprint, lj, rj, PromtSession
 from _api_call import SearchSongByName
 from config import Config
 
 # Initiate Singletone object
-session = _PromtSession.instance()
+session = PromtSession.instance()
 
 
 def render_logo() -> None:
@@ -33,13 +33,11 @@ def check_user_input(user_input: str) -> None:
         render_help_screen()
     # Search command
     elif user_input.lower().startswith("search"):
-        if len(user_input.split(" ")) > 1:
+        if len(user_input.split("=")) > 1:
             render_search_screen(user_input)
         else:
             print("\n" * 20)
-            fprint(
-                "<invalid>Bad Syntax. Please provide title for search or check help section</invalid>"
-            )
+            fprint("<invalid>Bad Syntax. Use search=[value]</invalid>")
     # Set config command
     elif user_input.lower().startswith("set"):
         if user_input.find("=") >= 0:
@@ -49,7 +47,7 @@ def check_user_input(user_input: str) -> None:
             render_all_configs()
         else:
             print("\n" * 20)
-            fprint("<invalid>Bad Syntax. Use set [key] [value] </invalid>")
+            fprint("<invalid>Bad Syntax. Use set [key]=[value] </invalid>")
     else:
         render_logo()
 
@@ -82,10 +80,10 @@ def render_search_screen(user_input: str) -> None:
         user_input (str): search query
     """
     print("\n" * 20)
-    search_title = user_input.split("search")[1].strip()
+    search_title = user_input.split("=")[-1].strip()
     videos_list = SearchSongByName(query=search_title)
-    while True:
-        print(f"Result for {search_title}")
+    while videos_list:
+        print(f"Result for {search_title}\n")
         print("{}{}".format("Num".ljust(5), "Title"))
         for i, video in enumerate(videos_list):
             if i % 2 != 0:
@@ -97,28 +95,51 @@ def render_search_screen(user_input: str) -> None:
                     "<even_list>{}{}</even_list>".format(str(i + 1).ljust(5), video[1])
                 )
 
+        print("\nEnter <index> to play and download=<index> to download the song.\n")
+
         user_input = session.prompt(">").strip()
         # Check if user want to play song from above list
         if user_input.isdigit():
-            user_input = int(user_input)
-            if user_input > 0 and user_input - 1 <= len(videos_list):
-                video_id = videos_list[user_input - 1][0]
-                # TODO:- Add AUDI_ONLY SUPPORT FROM conf
+            index = int(user_input)
+            if index > 0 and index - 1 <= len(videos_list):
+                video_id = videos_list[index - 1][0]
                 print("  {:<20}{:<20}".format("[<- | ->] seek", "[q] return"))
                 print("  {:<20}{:<20}".format("[9 | 0] volume", "[space] pause/play"))
-                param = " --no-video" if Config.AUDIO_ONLY else ""
+                param = " --no-video" if Config.AUDIO_ONLY.lower() == "true" else ""
                 os.system(
                     r'"{}"{} https://www.youtube.com/watch?v={}'.format(
                         Config.MPV_PATH, param, video_id
                     )
                 )
-                break
             else:
                 print("\n" * 20)
-                fprint("<invalid>Invalid range provided</invalid>")
+                fprint("<invalid>Please provide valid index</invalid>")
+        elif user_input.startswith("download"):
+            index = user_input.split("=")[-1]
+            if index.isdigit():
+                index = int(index)
+                if index > 0 and index - 1 <= len(videos_list):
+                    output = os.system(
+                        "youtube-dl https://www.youtube.com/watch?v={} -F".format(
+                            videos_list[index - 1][0]
+                        )
+                    )
+                    print(output)
+                    format_code = input("Provide format code no:- ")
+                    os.system(
+                        'youtube-dl https://www.youtube.com/watch?v={} -f {} -o "{}"'.format(
+                            videos_list[index - 1][0],
+                            format_code,
+                            Config.DOWNLOAD_PATH + "/%(title)s.%(ext)s",
+                        )
+                    )
+                else:
+                    print("\n" * 20)
+                    fprint("<invalid>Please provide valid index</invalid>")
         # Check if user want to check others command
         else:
-            check_user_input(user_input)
+            break
+    check_user_input(user_input)
 
 
 def set_user_config(user_input: str) -> None:

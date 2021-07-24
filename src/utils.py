@@ -5,7 +5,7 @@ style = Style.from_dict(
     {
         "title": "#f2ed46",
         "sub_title": "#ffff00",
-        "invalid": "#0000ff",
+        "invalid": "#ff0000",
         "odd_list": "#2978b5",
         "even_list": "#ff8303",
     }
@@ -29,7 +29,7 @@ def lj(text: str, margin: int = 2):
     return text.ljust(len(text) + margin)
 
 
-class _PromtSession:
+class PromtSession:
     """
     Singleton Object for prompt session
     """

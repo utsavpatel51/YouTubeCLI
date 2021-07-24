@@ -10,6 +10,7 @@ class Config:
     API_KEY = ""
     MPV_PATH = ""
     AUDIO_ONLY = ""
+    DOWNLOAD_PATH = ""
 
     def __init__(self) -> None:
         raise RuntimeError("Use classmethod insted of creating instance.")

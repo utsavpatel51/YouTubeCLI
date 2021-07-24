@@ -1,16 +1,14 @@
 import requests
 from config import Config as conf
 from rest_endpoint import RESTEndpoint
+from utils import fprint
 
 
 def _simple_request(url, headers={}, payload={}, params={}, method="GET"):
-    try:
-        response = requests.request(
-            method, url, headers=headers, data=payload, params=params
-        )
-        return response.json()
-    except Exception:
-        pass
+    response = requests.request(
+        method, url, headers=headers, data=payload, params=params
+    )
+    return response.status_code, response.json()
 
 
 def SearchSongByName(query: str):
@@ -22,8 +20,13 @@ def SearchSongByName(query: str):
         "type": "video",
         "q": query.strip(),
     }
-    result = _simple_request(url=url, params=params)
-    videos = [
-        (video["id"]["videoId"], video["snippet"]["title"]) for video in result["items"]
-    ]
-    return videos
+    status, result = _simple_request(url=url, params=params)
+    if status == 200:
+        videos = [
+            (video["id"]["videoId"], video["snippet"]["title"])
+            for video in result["items"]
+        ]
+        return videos
+    else:
+        fprint("<invalid>{}</invalid>".format(result["error"]["message"]))
+        return []
