@@ -5,7 +5,6 @@ from config import Config
 def main() -> None:
     # load config.json into class variable
     Config.load()
-
     render_welcome_screen()
 
 

@@ -70,7 +70,7 @@ def render_help_screen() -> None:
     fprint("<sub_title>{}</sub_title>".format(rj("Available options")))
     print()
     print(rj("{}: Search for song".format(lj("search")), 4))
-    print(rj("{}: Check/Edit your config(s)".format(lj("config")), 4))
+    print(rj("{}: Check/Edit your config(s)".format(lj("set")), 4))
 
 
 def render_search_screen(user_input: str) -> None:
@@ -82,17 +82,19 @@ def render_search_screen(user_input: str) -> None:
     print("\n" * 20)
     search_title = user_input.split("=")[-1].strip()
     videos_list = SearchSongByName(query=search_title)
-    while videos_list:
+    while True:
         print(f"Result for {search_title}\n")
         print("{}{}".format("Num".ljust(5), "Title"))
         for i, video in enumerate(videos_list):
             if i % 2 != 0:
                 fprint(
-                    "<odd_list>{}{}</odd_list>".format(str(i + 1).ljust(5), video[1])
+                    "<odd_list>{}{}</odd_list>".format(str(i + 1).ljust(5), video.Title)
                 )
             else:
                 fprint(
-                    "<even_list>{}{}</even_list>".format(str(i + 1).ljust(5), video[1])
+                    "<even_list>{}{}</even_list>".format(
+                        str(i + 1).ljust(5), video.Title
+                    )
                 )
 
         print("\nEnter <index> to play and download=<index> to download the song.\n")
@@ -102,7 +104,7 @@ def render_search_screen(user_input: str) -> None:
         if user_input.isdigit():
             index = int(user_input)
             if index > 0 and index - 1 <= len(videos_list):
-                video_id = videos_list[index - 1][0]
+                video_id = videos_list[index - 1].ID
                 print("  {:<20}{:<20}".format("[<- | ->] seek", "[q] return"))
                 print("  {:<20}{:<20}".format("[9 | 0] volume", "[space] pause/play"))
                 param = " --no-video" if Config.AUDIO_ONLY.lower() == "true" else ""
@@ -121,14 +123,18 @@ def render_search_screen(user_input: str) -> None:
                 if index > 0 and index - 1 <= len(videos_list):
                     output = os.system(
                         "youtube-dl https://www.youtube.com/watch?v={} -F".format(
-                            videos_list[index - 1][0]
+                            videos_list[index - 1].ID
                         )
                     )
                     print(output)
                     format_code = input("Provide format code no:- ")
+                    if not Config.DOWNLOAD_PATH:
+                        fprint(
+                            "<invalid>Download path is not set. Downloading on working directory</invalid>"
+                        )
                     os.system(
                         'youtube-dl https://www.youtube.com/watch?v={} -f {} -o "{}"'.format(
-                            videos_list[index - 1][0],
+                            videos_list[index - 1].ID,
                             format_code,
                             Config.DOWNLOAD_PATH + "/%(title)s.%(ext)s",
                         )
