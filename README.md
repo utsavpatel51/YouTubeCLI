@@ -16,7 +16,7 @@ Use `help` command to get the list and help text for each command currently supp
 Use `set` command to see the current configuration. To change particular configuration you can use set [key]=[value].
 For example set API_KEY=abc-sample-api-key.
 
-Note:- For MPV_PATH provide the path for mpv instead of mpv.exe
+Note: For MPV_PATH provide the path for mpv instead of mpv.exe
 
 # 1. Search for songs
 Use `search=[value]` to search the song.
