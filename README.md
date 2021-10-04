@@ -30,4 +30,4 @@ You can use `playlist=[name] play` to play entire playlist.
 
 ## Updates
 [05-10-2021]
-# Added support for create/play playlists
+- Added support for create/play playlists
