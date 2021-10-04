@@ -7,7 +7,6 @@ def _simple_request(url, headers={}, payload={}, params={}, method="GET"):
     response = requests.request(
         method, url, headers=headers, data=payload, params=params
     )
-    response.raise_for_status()
     return response.status_code, response.json()
 
 

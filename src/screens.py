@@ -129,8 +129,7 @@ def render_search_screen(user_input: str) -> None:
 
         helper_to_render_list(videos_list, field="Title")
 
-        print("\nEnter <index> to play. download=<index> to download the song. add_to_playlist=<index> to add \
-              video to playlist. \n")
+        print("\nEnter <index> to play. download=<index> to download the song. add_to_playlist=<index> to add video to playlist. \n")
 
         user_input = session.prompt(">").strip()
         # Check if user want to play song from above list
