@@ -1,12 +1,7 @@
 import requests
 from config import Config as conf
 from rest_endpoint import RESTEndpoint
-from utils import fprint
-from collections import namedtuple
-
-
-Video = namedtuple("Video", ["ID", "Title"])
-
+from utils import fprint, Video
 
 def _simple_request(url, headers={}, payload={}, params={}, method="GET"):
     response = requests.request(

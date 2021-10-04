@@ -1,6 +1,9 @@
 from prompt_toolkit import PromptSession, print_formatted_text, HTML
 from prompt_toolkit.styles import Style
+from collections import namedtuple
+import logging
 
+logger = logging.getLogger('AppLog')
 style = Style.from_dict(
     {
         "title": "#f2ed46",
@@ -8,9 +11,11 @@ style = Style.from_dict(
         "invalid": "#ff0000",
         "odd_list": "#2978b5",
         "even_list": "#ff8303",
+        "success": "#00ff00"
     }
 )
 
+Video = namedtuple("Video", ["ID", "Title"])
 
 def fprint(text: str):
     """Print Formated String
@@ -44,3 +49,10 @@ class PromtSession:
 
     def __init__(self) -> None:
         raise RuntimeError("Call instance() instead")
+
+
+def log_command_use(func):
+    def wrapTheFunction(user_input, *args, **kwargs):
+        logger.debug("Use command:- {}".format(user_input))
+        func(user_input, *args, **kwargs)
+    return wrapTheFunction
