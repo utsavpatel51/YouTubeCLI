@@ -18,6 +18,16 @@ For example set API_KEY=abc-sample-api-key.
 
 Note: For MPV_PATH provide the path for mpv instead of mpv.exe
 
-# 1. Search for songs
+# 3. Search for songs
 Use `search=[value]` to search the song.
-After hitting above command you will see the list of available youtube video matching your search text. Use <index> to play particular video and to download any video use download=<index>. If you choose to play video mpv player will play your video based on your configuration.
+After hitting above command you will see the list of available youtube video matching your search text. Use <index> to play particular video, to download any video use download=<index>, to add any video to playlist use add_to_playlist=<index>. If you choose to play video mpv player will play your video based on your configuration.
+
+# 4. Use Playlist
+Use `playlist=[name] create` to create the playlist.
+After that you can search for any video using `search` command and can use add_to_playlist option to add video to playlist.
+You can use `playlist=[name] play` to play entire playlist.
+
+
+## Updates
+[05-10-2021]
+# Added support for create/play playlists
